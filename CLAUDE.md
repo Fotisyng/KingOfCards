@@ -70,8 +70,10 @@ day-to-day work; Compose is for a consistent local libSQL server and a one-comma
   `@types/node` errors, not a clean failure). `apps/web/Dockerfile` copies the whole repo instead of
   a subset, since its `tsc -b` type-checks a devDependency import of `@kingofcards/api`'s
   `AppRouter` type.
-- `apps/api/src/index.ts` sets `trustProxy: 1` (one hop, through nginx) so rate-limiting keys off
-  the real caller's IP, not nginx's.
+- `apps/api/src/index.ts` sets `trustProxy: (_address, hop) => hop === 0` (trust exactly one hop,
+  nginx) so rate-limiting keys off the real caller's IP, not nginx's. Not the numeric `trustProxy: 1`
+  shorthand: fastify 5.12+ removed it, since a bare hop count can't validate the immediate peer, so
+  it now always returns false instead. This function reimplements the identical single-hop decision.
 
 ### Windows/WSL
 
