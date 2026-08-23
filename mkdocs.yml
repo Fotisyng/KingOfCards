@@ -1,0 +1,46 @@
+site_name: KingOfCards
+site_description: A flashcard app where the spaced-repetition scheduler is the product, not the CRUD around it.
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: deep purple
+      accent: amber
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: deep purple
+      accent: amber
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - content.code.copy
+    - toc.integrate
+
+markdown_extensions:
+  - admonition
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.highlight
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+
+nav:
+  - Home: index.md
+  - Architecture: architecture.md
+  - Getting Started: getting-started.md
+  - Adding Decks: adding-decks.md
+  - Docker: docker.md
+  - Deployment: deployment.md
+  - Scheduler Algorithms: scheduler.md
+  - SM-2 vs. HLR Comparison: comparison.md
+  - Design Decisions: design-decisions.md

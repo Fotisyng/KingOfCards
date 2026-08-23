@@ -1,0 +1,6 @@
+# Docs site tooling (mkdocs), a separate ecosystem from the pnpm workspace.
+# Setup: python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
+# Serve:  .venv/bin/mkdocs serve   (http://localhost:8000)
+mkdocs==1.6.1
+mkdocs-material==9.7.7
+pymdown-extensions==11.0.1

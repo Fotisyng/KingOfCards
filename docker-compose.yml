@@ -1,0 +1,81 @@
+services:
+  db:
+    image: ghcr.io/tursodatabase/libsql-server:v0.23.7
+    # No ports mapping (unauthenticated libSQL): api reaches db:8080 over the compose network via
+    # a JWT key pair from scripts/gen-db-auth-token.mjs (see .env.example).
+    environment:
+      SQLD_AUTH_JWT_KEY: "${TURSO_AUTH_JWT_PUBLIC_KEY}"
+    volumes:
+      - libsql-data:/var/lib/sqld
+    healthcheck:
+      # The image's debian-slim base has no curl/wget, just bash; a /dev/tcp connect is enough to
+      # confirm sqld's HTTP listener has actually bound, which is all `api`'s depends_on below needs.
+      test: ["CMD-SHELL", "bash -c 'exec 3<>/dev/tcp/127.0.0.1/8080'"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 5s
+
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    # No fixed host port (incompatible with --scale api=N): nginx proxies internally.
+    expose:
+      - "3001"
+    environment:
+      NODE_ENV: production
+      # This demo's `web` service terminates plain HTTP on :8081, not HTTPS; a browser won't send
+      # a Secure cookie back over that, which would silently break login here. A real deployment
+      # behind actual TLS should drop this override (COOKIE_OPTIONS defaults to secure: true).
+      COOKIE_SECURE: "false"
+      PORT: "3001"
+      TURSO_URL: "http://db:8080"
+      TURSO_AUTH_TOKEN: "${TURSO_AUTH_TOKEN}"
+      # Real SMTP creds are the same wherever this runs (unlike TURSO_URL above, which differs
+      # between the container-internal `db` host and host-side dev), sourced straight from `.env`.
+      # EMAIL_ENABLED unset/false just logs verification/reset links to the api container's logs,
+      # regardless of whether SMTP_* below is filled in.
+      EMAIL_ENABLED: "${EMAIL_ENABLED:-false}"
+      SMTP_HOST: "${SMTP_HOST:-}"
+      SMTP_PORT: "${SMTP_PORT:-587}"
+      SMTP_USER: "${SMTP_USER:-}"
+      SMTP_PASS: "${SMTP_PASS:-}"
+      SMTP_FROM: "${SMTP_FROM:-KingOfCards <no-reply@kingofcards.local>}"
+      WEB_BASE_URL: "${WEB_BASE_URL:-http://localhost:8081}"
+      # Leaving SENTRY_DSN unset just logs errors to the api container's own stdout.
+      SENTRY_DSN: "${SENTRY_DSN:-}"
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://localhost:3001/healthz').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 10s
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+      args:
+        VITE_API_URL: "/trpc"
+    ports:
+      - "8081:80"
+    depends_on:
+      api:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      # 127.0.0.1, not localhost: nginx only listens on 0.0.0.0:80 in this container, and
+      # localhost resolves to ::1 first, which wget then fails to connect to.
+      test: ["CMD", "wget", "--spider", "-q", "http://127.0.0.1/healthz"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 5s
+
+volumes:
+  libsql-data:

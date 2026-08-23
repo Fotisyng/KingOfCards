@@ -1,0 +1,20 @@
+{
+  "name": "@kingofcards/scheduler",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "vitest run",
+    "compare": "pnpm build && node scripts/compare.mjs"
+  },
+  "dependencies": {
+    "@kingofcards/domain-shared": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^6.0.2",
+    "vitest": "^4.1.10"
+  }
+}
