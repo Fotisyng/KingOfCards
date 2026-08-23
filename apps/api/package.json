@@ -25,7 +25,7 @@
   "dependencies": {
     "@fastify/compress": "^9.2.0",
     "@fastify/cookie": "^11.1.2",
-    "@fastify/cors": "^10.0.1",
+    "@fastify/cors": "^11.3.0",
     "@fastify/rate-limit": "^11.2.0",
     "@kingofcards/domain-shared": "workspace:*",
     "@kingofcards/scheduler": "workspace:*",
