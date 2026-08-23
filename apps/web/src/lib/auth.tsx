@@ -1,7 +1,7 @@
-import { trpc } from "@/lib/trpc";
 import type { User } from "@kingofcards/domain-shared";
 import { useQuery } from "@tanstack/react-query";
-import { type ReactNode, createContext, useContext } from "react";
+import { createContext, type ReactNode, useContext } from "react";
+import { trpc } from "@/lib/trpc";
 
 interface AuthContextValue {
   user: User | null | undefined; // undefined while the initial auth.me check is in flight

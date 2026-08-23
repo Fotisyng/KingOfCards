@@ -1,7 +1,7 @@
-import { trpc, trpcClient } from "@/lib/trpc";
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router";
+import { trpc, trpcClient } from "@/lib/trpc";
 
 type VerifyStatus = "pending" | "success" | "error";
 

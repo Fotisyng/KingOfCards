@@ -4,7 +4,7 @@
 // has to be pulled in directly here, where Context.res: FastifyReply is declared.
 import type {} from "@fastify/cookie";
 import type { Client } from "@libsql/client";
-import { TRPCError, initTRPC } from "@trpc/server";
+import { initTRPC, TRPCError } from "@trpc/server";
 import type { FastifyReply, FastifyRequest } from "fastify";
 
 export interface Context {

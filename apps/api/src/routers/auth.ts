@@ -9,10 +9,10 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import {
   DEFAULT_WEB_BASE_URL,
-  SESSION_COOKIE_NAME,
   generateToken,
   hashPassword,
   hashToken,
+  SESSION_COOKIE_NAME,
   verifyPassword,
 } from "../auth.js";
 import { HOUR_MS, RESET_PASSWORD_TTL_MS, SESSION_TTL_MS, VERIFY_EMAIL_TTL_MS } from "../constants.js";
@@ -23,8 +23,8 @@ import { checkRateLimit } from "../rateLimiter.js";
 import { RATE_LIMIT } from "../rateLimits.js";
 import * as authTokensRepo from "../repositories/authTokens.js";
 import * as sessionsRepo from "../repositories/sessions.js";
-import * as usersRepo from "../repositories/users.js";
 import type { UserRow } from "../repositories/users.js";
+import * as usersRepo from "../repositories/users.js";
 import { type Context, protectedProcedure, publicProcedure, router } from "../trpc.js";
 
 function toPublicUser(user: UserRow): User {

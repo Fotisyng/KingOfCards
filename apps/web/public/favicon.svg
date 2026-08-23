@@ -1,4 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <title>KingOfCards</title>
   <rect width="32" height="32" rx="8" fill="#5b2e8c"/>
   <path
     transform="translate(4,4)"

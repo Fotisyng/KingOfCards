@@ -1,3 +1,7 @@
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { Pencil, StickyNote, Trash2 } from "lucide-react";
+import { useState } from "react";
+import { useParams } from "react-router";
 import { LevelProgressRow } from "@/components/LevelProgressRow";
 import { MarkdownContent } from "@/components/MarkdownContent";
 import { Badge } from "@/components/ui/badge";
@@ -6,10 +10,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { trpc } from "@/lib/trpc";
-import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Pencil, StickyNote, Trash2 } from "lucide-react";
-import { useState } from "react";
-import { useParams } from "react-router";
 
 /** One deck's card list: level progress, public/private toggle, and inline card create/edit/delete. */
 export function DeckDetailPage() {

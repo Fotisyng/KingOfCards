@@ -1,3 +1,7 @@
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { Layers, Sparkles, Trash2 } from "lucide-react";
+import { useState } from "react";
+import { Link } from "react-router";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardTitle } from "@/components/ui/card";
@@ -5,10 +9,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { trpc } from "@/lib/trpc";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Layers, Sparkles, Trash2 } from "lucide-react";
-import { useState } from "react";
-import { Link } from "react-router";
 
 /** Lists the caller's decks, with inline create and delete-with-confirm. */
 export function DecksPage() {

@@ -95,11 +95,11 @@ This repo lives on a WSL filesystem, mounted from Windows as `\\wsl.localhost\ka
 - **Biome is the only lint/format tool**: not ESLint/Prettier, and `biome.json` is the single
   source of truth for style (2-space indent, 120-char lines, double quotes, semicolons, trailing
   commas). Run `pnpm lint:fix` rather than hand-formatting or hand-fixing style nits.
-  `organizeImports` sorts every file's imports into one flat alphabetical block, with no manual
-  grouping/blank lines between node builtins, packages, and relative imports; that's not a gap,
-  it's what the installed Biome version (1.9) does (grouped imports need Biome 2.x). Biome's
-  120-char limit only reflows code; it never wraps comment text, so keep single-line comments
-  under 120 chars by hand.
+  `organizeImports` (Biome 2.x) sorts each file's imports into node builtins, then external
+  packages, then relative/internal-alias imports, alphabetically within each group; no blank lines
+  between the groups, since that needs an explicit `groups` config this project doesn't set. Biome's
+  120-char limit only reflows code; it never wraps comment text, so keep single-line comments under
+  120 chars by hand.
 - **No em dashes, anywhere**: not in code comments, not in this file, not in `docs/*.md`. Use a
   comma, colon, semicolon, parenthetical, or a new sentence instead.
 - **Comments use the language's own single-line syntax, kept short**: `//` in TypeScript/TSX, `#`

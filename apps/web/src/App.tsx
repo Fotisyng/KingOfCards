@@ -1,13 +1,13 @@
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Crown, Menu, X } from "lucide-react";
+import { lazy, Suspense, useState } from "react";
+import { NavLink, Route, Routes, useNavigate } from "react-router";
 import { RequireAuth } from "@/components/RequireAuth";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/lib/auth";
 import { clearQueuedReviews } from "@/lib/offlineQueue";
 import { trpc } from "@/lib/trpc";
 import { cn } from "@/lib/utils";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Crown, Menu, X } from "lucide-react";
-import { Suspense, lazy, useState } from "react";
-import { NavLink, Route, Routes, useNavigate } from "react-router";
 
 const CommunityPage = lazy(() => import("@/pages/CommunityPage").then((m) => ({ default: m.CommunityPage })));
 const DeckDetailPage = lazy(() => import("@/pages/DeckDetailPage").then((m) => ({ default: m.DeckDetailPage })));

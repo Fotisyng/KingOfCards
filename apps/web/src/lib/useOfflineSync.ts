@@ -1,9 +1,9 @@
-import { type SyncFailureKind, countQueuedReviews, enqueueReview, flushQueuedReviews } from "@/lib/offlineQueue";
-import { trpc, trpcClient } from "@/lib/trpc";
 import type { Rating } from "@kingofcards/domain-shared";
 import { useQueryClient } from "@tanstack/react-query";
 import { isTRPCClientError } from "@trpc/client";
 import { useCallback, useEffect, useState } from "react";
+import { countQueuedReviews, enqueueReview, flushQueuedReviews, type SyncFailureKind } from "@/lib/offlineQueue";
+import { trpc, trpcClient } from "@/lib/trpc";
 
 // A queued rating can never succeed on retry once its session is gone (UNAUTHORIZED) or its
 // card/deck has since been deleted (NOT_FOUND); everything else (network blips, server hiccups)

@@ -1,10 +1,3 @@
-import { MarkdownContent } from "@/components/MarkdownContent";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardTitle } from "@/components/ui/card";
-import { useReviewSession } from "@/hooks/useReviewSession";
-import { trpc } from "@/lib/trpc";
-import { cn } from "@/lib/utils";
 import type { Rating } from "@kingofcards/domain-shared";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -24,6 +17,13 @@ import {
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router";
+import { MarkdownContent } from "@/components/MarkdownContent";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardTitle } from "@/components/ui/card";
+import { useReviewSession } from "@/hooks/useReviewSession";
+import { trpc } from "@/lib/trpc";
+import { cn } from "@/lib/utils";
 
 const REVIEW_ONBOARDING_KEY = "kingofcards:seen-review-onboarding";
 
@@ -242,10 +242,10 @@ function ReviewSession({ deckId }: { deckId?: string }) {
               >
                 <div className="rounded-[1.9rem] bg-gradient-to-br from-primary via-secondary to-primary p-[3px] shadow-xl shadow-primary/25">
                   {/* Fixed h-* (not min-h-*) gives the absolutely-positioned faces' size-full a definite height to resolve against; long content scrolls inside its face. */}
+                  {/* biome-ignore lint/a11y/useSemanticElements: MarkdownContent can render <a>, invalid in <button>. */}
                   <div
                     className="relative h-80 cursor-pointer sm:h-96"
                     style={{ perspective: 1600 }}
-                    // biome-ignore lint/a11y/useSemanticElements: MarkdownContent can render <a>, invalid in <button>.
                     role="button"
                     tabIndex={0}
                     onClick={() => !session.revealed && session.reveal()}

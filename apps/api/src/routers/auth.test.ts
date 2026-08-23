@@ -1,6 +1,6 @@
 import type { FastifyRequest } from "fastify";
 import { describe, expect, it, vi } from "vitest";
-import { SESSION_COOKIE_NAME, hashToken } from "../auth.js";
+import { hashToken, SESSION_COOKIE_NAME } from "../auth.js";
 import * as emailModule from "../email.js";
 import * as sessionsRepo from "../repositories/sessions.js";
 import { appRouter } from "../router.js";

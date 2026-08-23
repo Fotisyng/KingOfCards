@@ -1,6 +1,6 @@
-import { useAuth } from "@/lib/auth";
 import type { ReactNode } from "react";
 import { Navigate } from "react-router";
+import { useAuth } from "@/lib/auth";
 
 /**
  * Gates `children` behind a logged-in, verified session; redirects otherwise.

@@ -1,12 +1,12 @@
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { Globe, Users } from "lucide-react";
+import { useState } from "react";
+import { useNavigate } from "react-router";
 import { MarkdownContent } from "@/components/MarkdownContent";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardTitle } from "@/components/ui/card";
 import { trpc } from "@/lib/trpc";
-import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Globe, Users } from "lucide-react";
-import { useState } from "react";
-import { useNavigate } from "react-router";
 
 /** A public deck's sample cards; renders nothing until the preview query resolves with data. */
 function DeckPreview({ deckId }: { deckId: string }) {
@@ -17,6 +17,7 @@ function DeckPreview({ deckId }: { deckId: string }) {
   return (
     <div className="flex flex-col gap-2 border-border/70 border-t pt-3">
       {previewQuery.data.map((card, i) => (
+        // biome-ignore lint/suspicious/noArrayIndexKey: no id in this deliberately minimal payload; list is static, never reordered.
         <div key={`${card.frontMd}-${i}`} className="rounded-lg bg-muted/50 p-3 text-sm">
           <MarkdownContent source={card.frontMd} className="font-medium" />
           <MarkdownContent source={card.backMd} className="mt-1 text-muted-foreground" />

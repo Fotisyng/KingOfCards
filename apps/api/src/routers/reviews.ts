@@ -1,5 +1,5 @@
 import { SubmitReviewInputSchema } from "@kingofcards/domain-shared";
-import { Sm2Scheduler, daysBetween } from "@kingofcards/scheduler";
+import { daysBetween, Sm2Scheduler } from "@kingofcards/scheduler";
 import { notFoundError } from "../errors.js";
 import * as cardsRepo from "../repositories/cards.js";
 import * as decksRepo from "../repositories/decks.js";

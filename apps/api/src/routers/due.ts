@@ -1,7 +1,7 @@
 import { Sm2Scheduler } from "@kingofcards/scheduler";
 import type { Client } from "@libsql/client";
 import { z } from "zod";
-import { type LevelStatus, computeLevelStatuses, unlockedCardIds } from "../levels.js";
+import { computeLevelStatuses, type LevelStatus, unlockedCardIds } from "../levels.js";
 import * as cardsRepo from "../repositories/cards.js";
 import * as dueRepo from "../repositories/due.js";
 import * as reviewLogRepo from "../repositories/reviewLog.js";

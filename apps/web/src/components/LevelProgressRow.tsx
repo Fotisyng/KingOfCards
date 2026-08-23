@@ -1,5 +1,5 @@
-import { cn } from "@/lib/utils";
 import { Check, Lock } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface LevelStatus {
   level: number;
@@ -8,13 +8,7 @@ interface LevelStatus {
 }
 
 /** Renders a deck's levels as a row of cleared/current/locked pips. */
-export function LevelProgressRow({
-  levels,
-  size = "md",
-}: {
-  levels: LevelStatus[];
-  size?: "sm" | "md";
-}) {
+export function LevelProgressRow({ levels, size = "md" }: { levels: LevelStatus[]; size?: "sm" | "md" }) {
   if (levels.length === 0) return null;
 
   return (

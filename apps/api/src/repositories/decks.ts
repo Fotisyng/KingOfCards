@@ -1,7 +1,7 @@
 import { randomUUID } from "node:crypto";
 import type { CreateDeckInput, Deck } from "@kingofcards/domain-shared";
 import type { Client, InStatement, Row } from "@libsql/client";
-import { type Page, decodeCursor, encodeCursor } from "./pagination.js";
+import { decodeCursor, encodeCursor, type Page } from "./pagination.js";
 
 // batch() calls this large get chunked (cloneDeck), since there's no established precedent or documented
 // guarantee in this codebase that a single multi-thousand-statement batch is safe to send as one
