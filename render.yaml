@@ -37,6 +37,9 @@ services:
     runtime: static
     buildCommand: pnpm install --frozen-lockfile && pnpm --filter @kingofcards/web... build
     staticPublishPath: apps/web/dist
+    envVars:
+      - key: VITE_API_URL
+        value: /trpc
     routes:
       - type: rewrite
         source: /trpc/*
