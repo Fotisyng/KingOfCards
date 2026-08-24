@@ -1,9 +1,9 @@
+import { useQuery } from "@tanstack/react-query";
+import { CalendarClock, Flame, type LucideIcon, Target, Trophy } from "lucide-react";
 import { LevelProgressRow } from "@/components/LevelProgressRow";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { trpc } from "@/lib/trpc";
 import { cn } from "@/lib/utils";
-import { useQuery } from "@tanstack/react-query";
-import { CalendarClock, Flame, type LucideIcon, Target, Trophy } from "lucide-react";
 
 function StatCard({
   icon: Icon,
@@ -50,11 +50,7 @@ function SectionHeader({
 }
 
 /** Renders the last-14-days review count as a simple bar chart. */
-function ReviewActivityChart({
-  reviewsByDay,
-}: {
-  reviewsByDay: Array<{ day: string; count: number }>;
-}) {
+function ReviewActivityChart({ reviewsByDay }: { reviewsByDay: Array<{ day: string; count: number }> }) {
   const maxCount = Math.max(1, ...reviewsByDay.map((d) => d.count));
   const total = reviewsByDay.reduce((sum, d) => sum + d.count, 0);
 

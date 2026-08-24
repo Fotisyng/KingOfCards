@@ -4,9 +4,9 @@ import cors from "@fastify/cors";
 import rateLimit from "@fastify/rate-limit";
 import type { CreateFastifyContextOptions, FastifyHandlerOptions } from "@trpc/server/adapters/fastify";
 import { fastifyTRPCPlugin } from "@trpc/server/adapters/fastify";
-import Fastify from "fastify";
 import type { FastifyReply, FastifyRequest } from "fastify";
-import { DEFAULT_WEB_BASE_URL, SESSION_COOKIE_NAME, hashToken } from "./auth.js";
+import Fastify from "fastify";
+import { DEFAULT_WEB_BASE_URL, hashToken, SESSION_COOKIE_NAME } from "./auth.js";
 import { UNVERIFIED_ACCOUNT_GRACE_MS, UNVERIFIED_SWEEP_INTERVAL_MS } from "./constants.js";
 import { createDbClient } from "./db/client.js";
 import { migrate } from "./db/migrate.js";
@@ -61,8 +61,10 @@ function runSweep(): void {
 runSweep();
 setInterval(runSweep, UNVERIFIED_SWEEP_INTERVAL_MS);
 
-// trustProxy: 1 (one hop, nginx), not true; avoids a caller spoofing rate-limit identity via X-Forwarded-For.
-const app = Fastify({ logger: true, trustProxy: 1 });
+// Trust exactly one hop (nginx), not `true`, so a caller can't spoof rate-limit identity by prepending
+// entries to X-Forwarded-For. Fastify 5.12+ dropped the numeric `trustProxy: 1` shorthand (it now always
+// returns false), so this function reimplements the same "trust only the immediate hop" decision.
+const app = Fastify({ logger: true, trustProxy: (_address, hop) => hop === 0 });
 
 // Explicit allow-list, not `origin: true`; avoids leaking cross-origin responses via credentialed cookies.
 // DEFAULT_WEB_BASE_URL (localhost:5173) is dev-only: including it in production would let any local

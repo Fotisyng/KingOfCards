@@ -1,7 +1,7 @@
 import { addDays, daysBetween } from "../date-math.js";
 import type { Scheduler, SchedulerState } from "../types.js";
 import { createRng } from "./prng.js";
-import { type VirtualLearnerConfig, ratingFromRecall, stepVirtualLearner } from "./virtual-learner.js";
+import { ratingFromRecall, stepVirtualLearner, type VirtualLearnerConfig } from "./virtual-learner.js";
 
 export interface ComparisonOptions {
   cardCount: number;

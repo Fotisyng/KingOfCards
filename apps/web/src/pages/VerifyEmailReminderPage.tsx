@@ -1,7 +1,7 @@
+import { useMutation } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/lib/auth";
 import { trpc } from "@/lib/trpc";
-import { useMutation } from "@tanstack/react-query";
 
 /** Shown to a logged-in but unverified account; lets them re-send the verification email. */
 export function VerifyEmailReminderPage() {

@@ -134,6 +134,7 @@ const SEED_DECKS: SeedDeck[] = [
       {
         frontMd: "What is a template literal?",
         backMd:
+          // biome-ignore lint/suspicious/noTemplateCurlyInString: card text demonstrating the syntax, not real interpolation.
           "A string wrapped in backticks that supports interpolation and multi-line text.\n\n```js\nconst greeting = `Hello, ${name}!`;\n```",
       },
       {

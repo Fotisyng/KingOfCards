@@ -1,16 +1,10 @@
 import "highlight.js/styles/github-dark.css";
-import { cn } from "@/lib/utils";
 import ReactMarkdown from "react-markdown";
 import rehypeHighlight from "rehype-highlight";
 import remarkGfm from "remark-gfm";
+import { cn } from "@/lib/utils";
 
-export function MarkdownContent({
-  source,
-  className,
-}: {
-  source: string;
-  className?: string;
-}) {
+export function MarkdownContent({ source, className }: { source: string; className?: string }) {
   return (
     <div
       className={cn(

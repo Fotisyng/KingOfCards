@@ -1,5 +1,5 @@
 import type { Client } from "@libsql/client";
-import { type UserRow, mapUserRow } from "./users.js";
+import { mapUserRow, type UserRow } from "./users.js";
 
 export interface SessionWithUser {
   user: UserRow;

@@ -1,7 +1,7 @@
 import { randomUUID } from "node:crypto";
 import type { Card, CreateCardInput } from "@kingofcards/domain-shared";
 import type { Client, Row } from "@libsql/client";
-import { type Page, decodeCursor, encodeCursor } from "./pagination.js";
+import { decodeCursor, encodeCursor, type Page } from "./pagination.js";
 
 // The deck-detail page's card list, unlike listCardsByDeck's internal callers (levels.ts/due.ts,
 // which need a deck's complete ordered card list to chunk into levels): large decks (HSK 6) run

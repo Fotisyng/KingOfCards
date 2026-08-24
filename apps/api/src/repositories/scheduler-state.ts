@@ -1,6 +1,6 @@
 import { randomUUID } from "node:crypto";
 import type { Rating } from "@kingofcards/domain-shared";
-import { type Scheduler, type SchedulerState, daysBetween } from "@kingofcards/scheduler";
+import { daysBetween, type Scheduler, type SchedulerState } from "@kingofcards/scheduler";
 import type { Client } from "@libsql/client";
 
 /**
