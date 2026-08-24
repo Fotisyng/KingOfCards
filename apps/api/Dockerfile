@@ -1,4 +1,4 @@
-FROM node:20.20.2-slim AS build
+FROM node:22.23.2-slim AS build
 WORKDIR /repo
 RUN corepack enable
 
@@ -21,7 +21,7 @@ RUN pnpm --filter @kingofcards/scheduler --filter @kingofcards/domain-shared exe
 RUN rm -rf node_modules apps/api/node_modules packages/*/node_modules && \
   pnpm install --prod --frozen-lockfile
 
-FROM node:20.20.2-slim
+FROM node:22.23.2-slim
 ENV NODE_ENV=production
 WORKDIR /repo
 RUN corepack enable

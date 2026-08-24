@@ -25,7 +25,7 @@ only datastore.
 
 ## Setup and commands
 
-pnpm workspaces, Node >=20.
+pnpm workspaces, Node >=22.22.2.
 
 ```
 pnpm install               # installs the whole workspace
