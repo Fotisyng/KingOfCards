@@ -37,7 +37,6 @@ services:
     runtime: static
     buildCommand: pnpm install --frozen-lockfile && pnpm --filter @kingofcards/web... build
     staticPublishPath: apps/web/dist
-    plan: free
     routes:
       - type: rewrite
         source: /trpc/*
