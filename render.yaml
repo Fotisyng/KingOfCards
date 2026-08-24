@@ -16,7 +16,7 @@ services:
       - key: TURSO_AUTH_TOKEN
         sync: false
       - key: EMAIL_ENABLED
-        value: "false"
+        value: "true"
       - key: SMTP_HOST
         sync: false
       - key: SMTP_PORT
