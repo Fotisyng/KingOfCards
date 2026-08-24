@@ -43,7 +43,7 @@ services:
     routes:
       - type: rewrite
         source: /trpc/*
-        destination: https://kingofcards-api.onrender.com/trpc/:splat
+        destination: https://kingofcards-api.onrender.com/trpc/*
       - type: rewrite
         source: /healthz
         destination: https://kingofcards-api.onrender.com/healthz
