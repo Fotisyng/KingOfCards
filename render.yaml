@@ -30,7 +30,7 @@ services:
       - key: SMTP_PASS
         sync: false
       - key: SMTP_FROM
-        value: "KingOfCards <no-reply@kingofcards.local>"
+        value: "KingOfCards <onboarding@resend.dev>"
       - key: WEB_BASE_URL
         value: https://kingofcards-web.onrender.com
       - key: SENTRY_DSN
