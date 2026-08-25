@@ -216,10 +216,13 @@ sync was still beta when that was decided.
 ## Next steps
 
 - **Configure real email delivery.** Verification/password-reset emails currently only log to the
-  API console (no `SMTP_HOST` set): fine for local dev, but needed before anyone besides you can
-  actually receive one. Recommended: **Resend** (resend.com), no card required for its free tier,
-  3,000 emails/month; `email.ts` is already generic nodemailer SMTP so this needs zero code
-  changes, just real values for `SMTP_HOST`/`SMTP_USER`/`SMTP_PASS` in `.env`.
+  API console (`EMAIL_ENABLED=false`): fine for local dev, but needed before anyone besides you can
+  actually receive one. `email.ts` supports two transports via `EMAIL_TRANSPORT`: `"smtp"`
+  (generic nodemailer, needs `SMTP_HOST`/`SMTP_USER`/`SMTP_PASS`) and `"resend_api"` (a plain
+  `fetch` to Resend's HTTPS REST API, needs `RESEND_API_KEY`). Use `resend_api` on Render's free
+  tier, since free web services block outbound SMTP ports (25/465/587) entirely; `smtp` only
+  works once the service is on a paid instance type. Either way, **Resend** (resend.com) is the
+  recommended provider, no card required for its free tier, 3,000 emails/month.
 - **Configure real error tracking**, same shape as email above: `SENTRY_DSN` is unset today, so
   `errorTracking.ts` just logs to stdout. Create a free Sentry project and set `SENTRY_DSN` in
   `.env` (and in `render.yaml`'s synced env vars once deployed) before relying on it in production.

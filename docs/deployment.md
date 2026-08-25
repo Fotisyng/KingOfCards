@@ -15,11 +15,17 @@ for local dev/demo; production just points at real Turso cloud instead of the lo
 2. In Render: **New +** → **Blueprint**, connect this repo. Render reads `render.yaml` and creates
    both services.
 3. On `kingofcards-api`, fill in the env vars marked `sync: false` in `render.yaml`: `TURSO_URL` and
-   `TURSO_AUTH_TOKEN` from step 1, `SENTRY_DSN` for error tracking, and `SMTP_HOST`/`SMTP_USER`/
-   `SMTP_PASS` for real email delivery. `SENTRY_DSN` unset just logs errors to the service's
+   `TURSO_AUTH_TOKEN` from step 1, `SENTRY_DSN` for error tracking, and (for real email delivery)
+   whichever `EMAIL_TRANSPORT` you're using. `SENTRY_DSN` unset just logs errors to the service's
    console; email additionally needs `EMAIL_ENABLED` flipped to `"true"` once `SMTP_FROM` is on a
-   domain you've actually verified with your SMTP provider; until then, leave it `"false"` and
+   domain you've actually verified with your provider; until then, leave it `"false"` and
    verification/reset links just log to the console instead of sending.
+   - Render's free web services block outbound SMTP ports (25/465/587) entirely, so
+     `EMAIL_TRANSPORT=resend_api` (with `RESEND_API_KEY`) is the transport that actually works on
+     the free plan: it calls Resend's HTTPS REST API instead of connecting over SMTP.
+   - `EMAIL_TRANSPORT=smtp` (with `SMTP_HOST`/`SMTP_USER`/`SMTP_PASS`) only works once
+     `kingofcards-api` is on a paid Render instance type, since that's what lifts the SMTP port
+     block.
 
 ## Notes
 

@@ -1,7 +1,14 @@
 import { afterEach, describe, expect, it } from "vitest";
 import { assertEmailConfig } from "./email.js";
 
-const SMTP_KEYS = ["EMAIL_ENABLED", "SMTP_HOST", "SMTP_USER", "SMTP_PASS"] as const;
+const SMTP_KEYS = [
+  "EMAIL_ENABLED",
+  "EMAIL_TRANSPORT",
+  "SMTP_HOST",
+  "SMTP_USER",
+  "SMTP_PASS",
+  "RESEND_API_KEY",
+] as const;
 
 afterEach(() => {
   for (const key of SMTP_KEYS) delete process.env[key];
@@ -17,7 +24,7 @@ describe("assertEmailConfig", () => {
     expect(() => assertEmailConfig()).not.toThrow();
   });
 
-  it("doesn't throw when EMAIL_ENABLED is 'true' and every SMTP_* var is set", () => {
+  it("doesn't throw when EMAIL_ENABLED is 'true', EMAIL_TRANSPORT is unset, and every SMTP_* var is set", () => {
     process.env.EMAIL_ENABLED = "true";
     process.env.SMTP_HOST = "smtp.example.com";
     process.env.SMTP_USER = "resend";
@@ -35,5 +42,18 @@ describe("assertEmailConfig", () => {
     process.env.EMAIL_ENABLED = "true";
     Object.assign(process.env, vars);
     expect(() => assertEmailConfig()).toThrow(missing);
+  });
+
+  it("doesn't throw when EMAIL_TRANSPORT is 'resend_api' and RESEND_API_KEY is set", () => {
+    process.env.EMAIL_ENABLED = "true";
+    process.env.EMAIL_TRANSPORT = "resend_api";
+    process.env.RESEND_API_KEY = "re_test_key";
+    expect(() => assertEmailConfig()).not.toThrow();
+  });
+
+  it("throws when EMAIL_TRANSPORT is 'resend_api' but RESEND_API_KEY is missing", () => {
+    process.env.EMAIL_ENABLED = "true";
+    process.env.EMAIL_TRANSPORT = "resend_api";
+    expect(() => assertEmailConfig()).toThrow("RESEND_API_KEY");
   });
 });
