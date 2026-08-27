@@ -100,7 +100,7 @@ export function DecksPage() {
               to={`/review?deckId=${deck.id}`}
               className="shrink-0 rounded-full bg-primary px-3 py-1.5 font-medium text-primary-foreground text-sm transition-colors hover:bg-primary/80"
             >
-              Review
+              Practice
             </Link>
             {confirmDeleteId === deck.id ? (
               <div className="flex shrink-0 items-center gap-1.5">
