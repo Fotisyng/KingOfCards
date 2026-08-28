@@ -1,19 +1,6 @@
 import type { Rating } from "@kingofcards/domain-shared";
 import { useQuery } from "@tanstack/react-query";
-import {
-  ArrowLeft,
-  Club,
-  Diamond,
-  Heart,
-  Layers,
-  Lightbulb,
-  PartyPopper,
-  Shuffle,
-  Spade,
-  Sparkles,
-  WifiOff,
-  X,
-} from "lucide-react";
+import { ArrowLeft, Layers, Lightbulb, PartyPopper, Shuffle, Sparkles, WifiOff, X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router";
@@ -32,7 +19,8 @@ function ReviewOnboarding({ onDismiss }: { onDismiss: () => void }) {
     <Card className="w-full flex-row items-start gap-3 border-primary/20 bg-primary/5 px-4 py-3">
       <Lightbulb className="mt-0.5 size-4 shrink-0 text-primary" />
       <p className="flex-1 text-sm">
-        Rating recalculates when you'll see this card next — be honest, it's how the algorithm learns your memory.
+        Rating recalculates when you'll see this card next — be honest, it's how the algorithm learns your memory. New
+        cards unlock 5 at a time: clear the current 5 with Good or Easy to reveal the next batch.
       </p>
       <Button variant="ghost" size="icon-sm" className="shrink-0" aria-label="Dismiss" onClick={onDismiss}>
         <X />
@@ -100,8 +88,8 @@ function DeckPicker() {
 
   return (
     <div className="mx-auto flex max-w-2xl flex-col gap-6 p-6">
-      <h1 className="font-heading font-semibold text-2xl">Review</h1>
-      <p className="text-muted-foreground">Choose a deck to review.</p>
+      <h1 className="font-heading font-semibold text-2xl">Practice</h1>
+      <p className="text-muted-foreground">Choose a deck to practice.</p>
 
       <div className="flex flex-col gap-3">
         <Link to="/review?deckId=all">
@@ -215,22 +203,6 @@ function ReviewSession({ deckId }: { deckId?: string }) {
       ) : (
         <>
           <div className="relative w-full pt-4">
-            {/* Deck peek behind the card: rotation stays under 3° (a wide rect's bbox grows fast with angle); most offset comes from translate. */}
-            {session.queue.length > 2 && (
-              <div
-                className="absolute inset-0 top-2 z-0 h-40 rounded-[1.75rem] bg-secondary/50 ring-1 ring-secondary/40"
-                style={{ transform: "translate(9px, -5px) rotate(-2deg)" }}
-                aria-hidden
-              />
-            )}
-            {session.queue.length > 1 && (
-              <div
-                className="absolute inset-0 top-1 z-0 h-40 rounded-[1.75rem] bg-primary/20 ring-1 ring-primary/25"
-                style={{ transform: "translate(-7px, -3px) rotate(1.5deg)" }}
-                aria-hidden
-              />
-            )}
-
             <AnimatePresence mode="wait" initial={false}>
               <motion.div
                 key={session.currentCard.id}
@@ -240,76 +212,70 @@ function ReviewSession({ deckId }: { deckId?: string }) {
                 exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.2 }}
               >
-                <div className="rounded-[1.9rem] bg-gradient-to-br from-primary via-secondary to-primary p-[3px] shadow-xl shadow-primary/25">
-                  {/* Fixed h-* (not min-h-*) gives the absolutely-positioned faces' size-full a definite height to resolve against; long content scrolls inside its face. */}
-                  {/* biome-ignore lint/a11y/useSemanticElements: MarkdownContent can render <a>, invalid in <button>. */}
-                  <div
-                    className="relative h-80 cursor-pointer sm:h-96"
-                    style={{ perspective: 1600 }}
-                    role="button"
-                    tabIndex={0}
-                    onClick={() => !session.revealed && session.reveal()}
-                    onKeyDown={(e) => {
-                      if ((e.key === "Enter" || e.key === " ") && !session.revealed) {
-                        e.preventDefault();
-                        session.reveal();
-                      }
-                    }}
+                {/* Fixed h-* (not min-h-*) gives the absolutely-positioned faces' size-full a definite height to resolve against; long content scrolls inside its face. */}
+                {/* biome-ignore lint/a11y/useSemanticElements: MarkdownContent can render <a>, invalid in <button>. */}
+                <div
+                  className="relative h-80 cursor-pointer sm:h-96"
+                  style={{ perspective: 1600 }}
+                  role="button"
+                  tabIndex={0}
+                  onClick={() => !session.revealed && session.reveal()}
+                  onKeyDown={(e) => {
+                    if ((e.key === "Enter" || e.key === " ") && !session.revealed) {
+                      e.preventDefault();
+                      session.reveal();
+                    }
+                  }}
+                >
+                  <motion.div
+                    className="relative size-full"
+                    style={{ transformStyle: "preserve-3d" }}
+                    animate={{ rotateY: session.revealed ? 180 : 0 }}
+                    transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
                   >
-                    <motion.div
-                      className="relative size-full"
-                      style={{ transformStyle: "preserve-3d" }}
-                      animate={{ rotateY: session.revealed ? 180 : 0 }}
-                      transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
+                    <Card
+                      className="absolute inset-0 flex flex-col items-center justify-center gap-4 overflow-y-auto rounded-2xl border-none bg-primary py-12 text-primary-foreground shadow-md"
+                      style={{ backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden" }}
                     >
-                      <Card
-                        className="absolute inset-0 flex flex-col items-center justify-center gap-4 overflow-y-auto rounded-[1.75rem] border-none bg-gradient-to-br from-primary via-[oklch(0.32_0.16_305)] to-[oklch(0.22_0.13_295)] py-12 text-primary-foreground"
-                        style={{ backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden" }}
-                      >
-                        <Spade className="absolute top-5 left-5 size-5 text-primary-foreground/25" aria-hidden />
-                        <Club className="absolute right-5 bottom-5 size-5 text-primary-foreground/25" aria-hidden />
-                        <CardContent className="flex flex-col items-center gap-4">
-                          <MarkdownContent
-                            source={session.currentCard.frontMd}
-                            className={frontSizeClass(session.currentCard.frontMd)}
-                          />
-                        </CardContent>
-                        <span className="text-primary-foreground/60 text-xs">Tap or press space to reveal</span>
-                      </Card>
+                      <CardContent className="flex flex-col items-center gap-4">
+                        <MarkdownContent
+                          source={session.currentCard.frontMd}
+                          className={frontSizeClass(session.currentCard.frontMd)}
+                        />
+                      </CardContent>
+                      <span className="text-primary-foreground/60 text-xs">Tap or press space to reveal</span>
+                    </Card>
 
-                      <Card
-                        className="absolute inset-0 flex flex-col items-center justify-center gap-4 overflow-y-auto rounded-[1.75rem] border-none bg-gradient-to-br from-secondary via-[oklch(0.88_0.05_85)] to-card py-12"
-                        style={{
-                          backfaceVisibility: "hidden",
-                          WebkitBackfaceVisibility: "hidden",
-                          transform: "rotateY(180deg)",
-                        }}
-                      >
-                        <Heart className="absolute top-5 left-5 size-5 text-primary/25" aria-hidden />
-                        <Diamond className="absolute right-5 bottom-5 size-5 text-primary/25" aria-hidden />
-                        <CardContent className="flex flex-col items-center gap-4">
-                          <MarkdownContent source={session.currentCard.backMd} />
-                        </CardContent>
-                      </Card>
-                    </motion.div>
-                  </div>
+                    <Card
+                      className="absolute inset-0 flex flex-col items-center justify-center gap-4 overflow-y-auto rounded-2xl border-none bg-card py-12 shadow-md"
+                      style={{
+                        backfaceVisibility: "hidden",
+                        WebkitBackfaceVisibility: "hidden",
+                        transform: "rotateY(180deg)",
+                      }}
+                    >
+                      <CardContent className="flex flex-col items-center gap-4">
+                        <MarkdownContent source={session.currentCard.backMd} />
+                      </CardContent>
+                    </Card>
+                  </motion.div>
                 </div>
               </motion.div>
             </AnimatePresence>
           </div>
 
           {!session.revealed ? (
-            <Button size="lg" className="rounded-full px-8" onClick={session.reveal}>
+            <Button size="lg" className="rounded-xl px-8" onClick={session.reveal}>
               Show answer (space)
             </Button>
           ) : (
             <div className="grid w-full grid-cols-4 gap-2">
               {RATING_BUTTONS.map(({ rating, label, className }) => (
-                <motion.div key={rating} whileTap={{ scale: 0.94 }}>
+                <motion.div key={rating} whileTap={{ scale: 0.97 }}>
                   <Button
                     disabled={session.submitting}
                     onClick={() => session.rate(rating)}
-                    className={cn("w-full rounded-full font-semibold", className)}
+                    className={cn("w-full rounded-lg font-medium", className)}
                   >
                     {label}
                   </Button>

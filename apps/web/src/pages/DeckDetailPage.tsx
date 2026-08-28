@@ -97,7 +97,14 @@ export function DeckDetailPage() {
         )}
       </div>
 
-      {levelsQuery.data && <LevelProgressRow levels={levelsQuery.data} />}
+      {levelsQuery.data && levelsQuery.data.length > 0 && (
+        <div className="flex flex-col gap-1.5">
+          <LevelProgressRow levels={levelsQuery.data} />
+          <p className="text-muted-foreground text-xs">
+            New cards unlock 5 at a time as you clear each batch with Good or Easy.
+          </p>
+        </div>
+      )}
 
       <Card className="border-primary/10 bg-card/70">
         <CardContent>

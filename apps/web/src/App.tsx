@@ -34,7 +34,7 @@ const VerifyEmailReminderPage = lazy(() =>
 
 const NAV_LINKS = [
   { to: "/", label: "Decks" },
-  { to: "/review", label: "Review" },
+  { to: "/review", label: "Practice" },
   { to: "/stats", label: "Stats" },
   { to: "/community", label: "Community" },
 ];
