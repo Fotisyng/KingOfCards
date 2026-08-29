@@ -17,6 +17,33 @@ export async function getDeckLevelStatuses(db: Client, userId: string, deckId: s
   return computeLevelStatuses(cardIds, qualifying);
 }
 
+/**
+ * Computes level statuses for several decks at once, shared by `levels.getForDecks`.
+ *
+ * Unlike calling {@link getDeckLevelStatuses} once per deck, this does a single
+ * `getQualifyingCardIds` call across every deck's cards combined, so the caller pays for one
+ * `review_log` join instead of one per deck.
+ */
+export async function getLevelStatusesForDecks(
+  db: Client,
+  userId: string,
+  deckIds: string[],
+): Promise<Record<string, LevelStatus[]>> {
+  const cardIdsByDeck = await Promise.all(
+    deckIds.map(async (deckId) => {
+      const orderedCards = await cardsRepo.listCardsByDeck(db, userId, deckId);
+      return [deckId, orderedCards.map((card) => card.id)] as const;
+    }),
+  );
+
+  const allCardIds = cardIdsByDeck.flatMap(([, cardIds]) => cardIds);
+  const qualifying = await reviewLogRepo.getQualifyingCardIds(db, userId, allCardIds);
+
+  return Object.fromEntries(
+    cardIdsByDeck.map(([deckId, cardIds]) => [deckId, computeLevelStatuses(cardIds, qualifying)]),
+  );
+}
+
 export const dueRouter = router({
   /**
    * Lists due cards, with brand-new cards additionally gated by level progression.

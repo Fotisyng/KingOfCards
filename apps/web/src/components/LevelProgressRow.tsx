@@ -1,7 +1,7 @@
 import { Check, Lock } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-interface LevelStatus {
+export interface LevelStatus {
   level: number;
   cardIds: string[];
   status: "cleared" | "current" | "locked";
