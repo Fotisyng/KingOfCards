@@ -14,7 +14,7 @@ export const statsRouter = router({
     const [dueToday, retentionRate, reviewDays, reviewsByDay] = await Promise.all([
       statsRepo.countDueCards(ctx.db, ctx.userId, ALGORITHM, now),
       statsRepo.getRetentionRate(ctx.db, ctx.userId, ALGORITHM),
-      statsRepo.getReviewDays(ctx.db, ctx.userId, ALGORITHM),
+      statsRepo.getReviewDays(ctx.db, ctx.userId, ALGORITHM, today),
       statsRepo.getReviewCountsByDay(ctx.db, ctx.userId, ALGORITHM, REVIEW_TREND_DAYS, today),
     ]);
 

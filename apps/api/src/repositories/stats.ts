@@ -67,7 +67,7 @@ export async function getReviewCountsByDay(
       FROM review_log rl
       JOIN card c ON c.id = rl.card_id
       JOIN deck d ON d.id = c.deck_id
-      WHERE rl.algorithm = ? AND d.user_id = ? AND substr(rl.rated_at, 1, 10) >= ?
+      WHERE rl.algorithm = ? AND d.user_id = ? AND rl.rated_at >= ?
       GROUP BY day
     `,
     args: [algorithm, userId, cutoffDay],
@@ -84,22 +84,33 @@ export async function getReviewCountsByDay(
   return result;
 }
 
+/** How far back {@link getReviewDays} looks for streak days. Well beyond any realistic streak, so it never
+ * truncates a real one, while keeping the query bounded for long-lived accounts. */
+const STREAK_LOOKBACK_DAYS = 400;
+
 /**
- * Distinct calendar days (UTC) with at least one review, most recent first.
+ * Distinct calendar days (UTC) with at least one review in the last {@link STREAK_LOOKBACK_DAYS} days, most
+ * recent first.
  *
- * The raw material `computeStreak()` (`src/stats.ts`) turns into a consecutive-day count.
+ * The raw material `computeStreak()` (`src/stats.ts`) turns into a consecutive-day count; that function only
+ * ever walks backward from `today` until the first gap, so bounding the lookback window doesn't change the
+ * result for any realistic streak.
  */
-export async function getReviewDays(db: Client, userId: string, algorithm: string): Promise<string[]> {
+export async function getReviewDays(db: Client, userId: string, algorithm: string, today: string): Promise<string[]> {
+  const cutoff = new Date(`${today}T00:00:00.000Z`);
+  cutoff.setUTCDate(cutoff.getUTCDate() - (STREAK_LOOKBACK_DAYS - 1));
+  const cutoffDay = cutoff.toISOString().slice(0, 10);
+
   const rs = await db.execute({
     sql: `
       SELECT DISTINCT substr(rl.rated_at, 1, 10) as day
       FROM review_log rl
       JOIN card c ON c.id = rl.card_id
       JOIN deck d ON d.id = c.deck_id
-      WHERE rl.algorithm = ? AND d.user_id = ?
+      WHERE rl.algorithm = ? AND d.user_id = ? AND rl.rated_at >= ?
       ORDER BY day DESC
     `,
-    args: [algorithm, userId],
+    args: [algorithm, userId, cutoffDay],
   });
   return rs.rows.map((row) => row.day as string);
 }

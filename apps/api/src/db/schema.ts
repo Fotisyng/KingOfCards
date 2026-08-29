@@ -84,5 +84,6 @@ CREATE INDEX IF NOT EXISTS idx_session_user_id ON session(user_id);
 CREATE INDEX IF NOT EXISTS idx_auth_token_user_id ON auth_token(user_id);
 CREATE INDEX IF NOT EXISTS idx_card_deck_id ON card(deck_id);
 CREATE INDEX IF NOT EXISTS idx_review_log_card_id ON review_log(card_id);
+CREATE INDEX IF NOT EXISTS idx_review_log_algorithm_rated_at ON review_log(algorithm, rated_at);
 CREATE INDEX IF NOT EXISTS idx_card_scheduler_state_due_at ON card_scheduler_state(due_at);
 `;

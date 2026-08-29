@@ -1,7 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { CalendarClock, Flame, type LucideIcon, Target, Trophy } from "lucide-react";
-import { LevelProgressRow } from "@/components/LevelProgressRow";
+import { LevelProgressRow, type LevelStatus } from "@/components/LevelProgressRow";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { trpc } from "@/lib/trpc";
 import { cn } from "@/lib/utils";
 
@@ -49,8 +50,8 @@ function SectionHeader({
   );
 }
 
-/** Renders the last-14-days review count as a simple bar chart. */
-function ReviewActivityChart({ reviewsByDay }: { reviewsByDay: Array<{ day: string; count: number }> }) {
+/** Renders the last-14-days practice count as a simple bar chart, with a per-day hover tooltip. */
+function PracticeActivityChart({ reviewsByDay }: { reviewsByDay: Array<{ day: string; count: number }> }) {
   const maxCount = Math.max(1, ...reviewsByDay.map((d) => d.count));
   const total = reviewsByDay.reduce((sum, d) => sum + d.count, 0);
 
@@ -59,33 +60,41 @@ function ReviewActivityChart({ reviewsByDay }: { reviewsByDay: Array<{ day: stri
       <SectionHeader
         icon={CalendarClock}
         iconClassName="bg-indigo-100 text-indigo-600 dark:bg-indigo-500/20 dark:text-indigo-300"
-        label={`Last 14 days · ${total} review${total === 1 ? "" : "s"}`}
+        label={`Last 14 days · ${total} practice session${total === 1 ? "" : "s"}`}
       />
       <CardContent>
-        <div className="flex h-20 items-end gap-1">
-          {reviewsByDay.map(({ day, count }) => (
-            <div
-              key={day}
-              title={`${day}: ${count} review${count === 1 ? "" : "s"}`}
-              className="min-h-1 flex-1 rounded-t bg-indigo-500/70 dark:bg-indigo-400/70"
-              style={{ height: `${Math.max(4, (count / maxCount) * 100)}%` }}
-            />
-          ))}
-        </div>
+        <TooltipProvider>
+          <div className="flex h-20 items-end gap-1">
+            {reviewsByDay.map(({ day, count }) => (
+              <Tooltip key={day}>
+                <TooltipTrigger
+                  render={
+                    <div
+                      className="min-h-1 flex-1 rounded-t bg-indigo-500/70 dark:bg-indigo-400/70"
+                      style={{ height: `${Math.max(4, (count / maxCount) * 100)}%` }}
+                    />
+                  }
+                />
+                <TooltipContent>
+                  {day}: {count} practice session{count === 1 ? "" : "s"}
+                </TooltipContent>
+              </Tooltip>
+            ))}
+          </div>
+        </TooltipProvider>
       </CardContent>
     </Card>
   );
 }
 
-/** Renders one deck's level progress row; renders nothing until it has levels. */
-function DeckLevelRow({ deckId, deckName }: { deckId: string; deckName: string }) {
-  const levelsQuery = useQuery(trpc.levels.get.queryOptions({ deckId }));
-  if (!levelsQuery.data || levelsQuery.data.length === 0) return null;
+/** Renders one deck's level progress row from an already-fetched batch; renders nothing until it has levels. */
+function DeckLevelRow({ deckName, levels }: { deckName: string; levels: LevelStatus[] | undefined }) {
+  if (!levels || levels.length === 0) return null;
 
   return (
     <div className="flex flex-col gap-1.5">
       <p className="text-muted-foreground text-sm">{deckName}</p>
-      <LevelProgressRow levels={levelsQuery.data} size="sm" />
+      <LevelProgressRow levels={levels} size="sm" />
     </div>
   );
 }
@@ -94,6 +103,11 @@ function DeckLevelRow({ deckId, deckName }: { deckId: string; deckName: string }
 export function StatsPage() {
   const statsQuery = useQuery(trpc.stats.summary.queryOptions());
   const decksQuery = useQuery(trpc.decks.list.queryOptions());
+  const deckIds = decksQuery.data?.map((deck) => deck.id) ?? [];
+  const levelsQuery = useQuery({
+    ...trpc.levels.getForDecks.queryOptions({ deckIds }),
+    enabled: deckIds.length > 0,
+  });
   const stats = statsQuery.data;
 
   return (
@@ -120,7 +134,7 @@ export function StatsPage() {
         />
       </div>
 
-      {stats && <ReviewActivityChart reviewsByDay={stats.reviewsByDay} />}
+      {stats && <PracticeActivityChart reviewsByDay={stats.reviewsByDay} />}
 
       {decksQuery.data && decksQuery.data.length > 0 && (
         <Card className="gap-4">
@@ -131,7 +145,7 @@ export function StatsPage() {
           />
           <CardContent className="flex flex-col gap-4">
             {decksQuery.data.map((deck) => (
-              <DeckLevelRow key={deck.id} deckId={deck.id} deckName={deck.name} />
+              <DeckLevelRow key={deck.id} deckName={deck.name} levels={levelsQuery.data?.[deck.id]} />
             ))}
           </CardContent>
         </Card>
