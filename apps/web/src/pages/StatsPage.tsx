@@ -67,12 +67,16 @@ function PracticeActivityChart({ reviewsByDay }: { reviewsByDay: Array<{ day: st
           <div className="flex h-20 items-end gap-1">
             {reviewsByDay.map(({ day, count }) => (
               <Tooltip key={day}>
+                {/* The trigger spans the full column height so hovering anywhere above a short
+                    bar still shows its tooltip, not just the bar's own (possibly tiny) height. */}
                 <TooltipTrigger
                   render={
-                    <div
-                      className="min-h-1 flex-1 rounded-t bg-indigo-500/70 dark:bg-indigo-400/70"
-                      style={{ height: `${Math.max(4, (count / maxCount) * 100)}%` }}
-                    />
+                    <div className="flex h-full flex-1 items-end">
+                      <div
+                        className="min-h-1 w-full rounded-t bg-indigo-500/70 dark:bg-indigo-400/70"
+                        style={{ height: `${Math.max(4, (count / maxCount) * 100)}%` }}
+                      />
+                    </div>
                   }
                 />
                 <TooltipContent>
