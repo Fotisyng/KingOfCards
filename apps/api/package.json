@@ -29,18 +29,18 @@
     "@fastify/rate-limit": "^11.2.0",
     "@kingofcards/domain-shared": "workspace:*",
     "@kingofcards/scheduler": "workspace:*",
-    "@libsql/client": "^0.17.4",
-    "@sentry/node": "^10.70.0",
+    "@libsql/client": "^0.18.0",
+    "@sentry/node": "^10.74.0",
     "@trpc/server": "^11.0.0",
     "bcryptjs": "^3.0.3",
-    "fastify": "^5.12.1",
+    "fastify": "^5.12.3",
     "nodemailer": "^9.0.5",
-    "zod": "^4.4.3"
+    "zod": "^4.6.1"
   },
   "devDependencies": {
-    "@types/node": "^26.2.0",
+    "@types/node": "^26.5.1",
     "@types/nodemailer": "^8.0.1",
-    "tsx": "^4.19.2",
+    "tsx": "^4.23.13",
     "typescript": "^7.0.2",
     "vitest": "^4.1.11"
   }
